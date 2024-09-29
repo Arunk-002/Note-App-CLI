@@ -1,3 +1,6 @@
+A note taking app(CLI) made on node.js which utilizes the yargs and fs modules.
+
+
 adding Note: node index.js add --title="new" --body="new Note"
 
 list all Notes:    npm start list 
