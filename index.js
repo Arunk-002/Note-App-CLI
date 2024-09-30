@@ -58,4 +58,24 @@ yargs.command({
         noteFunc.readNote(argv.title)
     }
 })
+
+yargs.command({
+    command:'edit',
+    describe:'Edit a specified note',
+    builder:{
+        title:{
+            describe:'to select the note',
+            demandOption:true,
+            type:'String'
+        },
+        body:{
+            describe:'new body to be appended',
+            demandOption:true,
+            type:'String'
+        }
+    },
+    handler(argv){{
+        noteFunc.editNote(argv.title,argv.body)
+    }}
+})
 yargs.parse()

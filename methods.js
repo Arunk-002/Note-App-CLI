@@ -1,5 +1,4 @@
 const { title } = require('process');
-
 const fs = require('fs').promises;// this is a promise version of fs modules so there is no need for callbacks.
 // const http = require('http');
 
@@ -11,6 +10,8 @@ async function addNote(title,body) {
         notes.push(newnote);
         await fs.writeFile('notes.json',JSON.stringify(notes, null, 2));// Since we are adding the entire array we use writefile instead of 
         //appendfile.
+        console.log('\n note added \n');
+        
     }else{
         console.log('\nNote already exists\n');
     }
@@ -54,6 +55,25 @@ async function readNote(title) {
     return 
 }
 
+async function editNote(title,body) {
+    let notes = await getNotes()
+    let editedlem
+    if (noteChecker(title,notes)) {
+        for (const element of notes) {
+            if (element.title===title) {
+                element.body=body;
+                editedlem=element;  
+                break;
+            }
+        }
+        await fs.writeFile('notes.json',JSON.stringify(notes,null,2))
+        console.log('Edited :\n',editedlem);
+    }else{
+        console.log('note not found');
+    }    
+}
+
+
 // --------------------------------------------------------------------------
 
 async function getNotes(){
@@ -64,9 +84,9 @@ async function getNotes(){
         return []
     }
 }
-function noteChecker(ctitle,notes) {    
+function noteChecker(title,notes) {    
     for (const element of notes) {
-        if (element.title==ctitle) {
+        if (element.title==title) {
             return title
         }
     }
@@ -79,4 +99,5 @@ module.exports={
     listAllNotes,
     removeNote,
     readNote,
+    editNote
 }

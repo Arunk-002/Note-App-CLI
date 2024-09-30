@@ -10,3 +10,5 @@ list all Notes:    npm start list
 remove a note: node index.js remove --title="new1"
 
 read a note: node index.js read --title="new1"
+
+edit a note: node index.js edit --title="new1" --body="new edited body"
