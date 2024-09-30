@@ -1,6 +1,6 @@
-const { title } = require('process');
-const fs = require('fs').promises;// this is a promise version of fs modules so there is no need for callbacks.
-// const http = require('http');
+const fs = require('fs').promises;
+// this is a promise version of fs modules so there is no need for callbacks.
+const chalk = require('chalk')// used an older version of  chalk@4  since new version uses ESM.
 
 // -----------------crud----------------------
 async function addNote(title,body) {
@@ -10,10 +10,10 @@ async function addNote(title,body) {
         notes.push(newnote);
         await fs.writeFile('notes.json',JSON.stringify(notes, null, 2));// Since we are adding the entire array we use writefile instead of 
         //appendfile.
-        console.log('\n note added \n');
+        success('\n note added \n');
         
     }else{
-        console.log('\nNote already exists\n');
+        error('\nNote already exists\n');
     }
 }
 
@@ -22,10 +22,10 @@ async function listAllNotes() {
     let notes = await getNotes()
     if (notes.length>0) {
         notes.forEach(element => {
-            console.log(element);
+            success(`${element.title} : ${element.body}\n`);
         });
     }else{
-        console.log('\nNo Notes\n');
+        error('\nNo Notes\n');
     }
 }
 
@@ -36,9 +36,9 @@ async function removeNote(title) {
             return element.title!=title
         });
         await fs.writeFile('notes.json',JSON.stringify(newNotes, null, 2))
-        console.log(`\n${title} note removed\n`);   
+        success(`\n${title} note removed\n`);   
     }else{
-        console.log('\nThis note dont exist\n');
+       error('\nThis note dont exist\n');
         
     }
 }
@@ -47,11 +47,11 @@ async function readNote(title) {
     let notes = await getNotes()
     for (const element of notes) {
         if (element.title==title) {
-            console.log('\n',element,'\n');
+            success(`\n${element.title} : ${element.body}\n`);
             return
         }
     }
-    console.log('\nThis note dont exist\n');
+    error('\nThis note dont exist\n');
     return 
 }
 
@@ -63,13 +63,13 @@ async function editNote(title,body) {
             if (element.title===title) {
                 element.body=body;
                 editedlem=element;  
-                break;
+                break;// used break instead of return bcz it returns the value prematurly ,so to avoid this break is used.
             }
         }
         await fs.writeFile('notes.json',JSON.stringify(notes,null,2))
-        console.log('Edited :\n',editedlem);
+       success(`Edited :\n${editedlem.title} : ${editedlem.body}`);
     }else{
-        console.log('note not found');
+        error('note not found');
     }    
 }
 
@@ -92,6 +92,16 @@ function noteChecker(title,notes) {
     }
     return false   
 }
+
+// ------------------------------chalk-functions---------------------------
+
+const error=(message)=>{
+    console.log(chalk.red(message))
+}
+const success=(message)=>{
+    console.log(chalk.green(message))
+}
+
 
 module.exports={
     addNote,
